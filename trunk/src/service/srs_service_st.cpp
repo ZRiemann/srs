@@ -309,6 +309,8 @@ srs_error_t SrsStSocket::read(void* buf, size_t size, ssize_t* nread)
         }
         
         return srs_error_new(ERROR_SOCKET_READ, "read");
+    }else{
+        zprint_bin((char*)buf, (int)nb_read);
     }
     
     rbytes += nb_read;
@@ -345,6 +347,8 @@ srs_error_t SrsStSocket::read_fully(void* buf, size_t size, ssize_t* nread)
         }
         
         return srs_error_new(ERROR_SOCKET_READ_FULLY, "read fully");
+    }else{
+        zprint_bin((char*)buf, (int)nb_read);
     }
     
     rbytes += nb_read;
@@ -376,6 +380,8 @@ srs_error_t SrsStSocket::write(void* buf, size_t size, ssize_t* nwrite)
         }
         
         return srs_error_new(ERROR_SOCKET_WRITE, "write");
+    }else{
+        zprint_bin((char*)buf, (int)nb_write);
     }
     
     sbytes += nb_write;
@@ -407,6 +413,12 @@ srs_error_t SrsStSocket::writev(const iovec *iov, int iov_size, ssize_t* nwrite)
         }
         
         return srs_error_new(ERROR_SOCKET_WRITE, "writev");
+    }else{
+#if ZTRACE_SHORT
+        for(int i = 0; i < iov_size; ++i){
+            zprint_bin((char*)iov[i].iov_base, (int)iov[i].iov_len);
+        }
+#endif
     }
     
     sbytes += nb_write;

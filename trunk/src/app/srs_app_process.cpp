@@ -275,7 +275,7 @@ srs_error_t SrsProcess::cycle()
     }
     
     if (p == 0) {
-        srs_info("process process pid=%d is running.", pid);
+        srs_verbose("process process pid=%d is running.", pid);
         return err;
     }
     

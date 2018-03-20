@@ -127,7 +127,7 @@ void SrsConsoleLog::info(const char* tag, int context_id, const char* fmt, ...)
     }
     
     int size = 0;
-    if (!srs_log_header(buffer, SRS_BASIC_LOG_SIZE, utc, false, tag, context_id, "Debug", &size)) {
+    if (!srs_log_header(buffer, SRS_BASIC_LOG_SIZE, utc, false, tag, context_id, "Info", &size)) {
         return;
     }
     
@@ -226,6 +226,12 @@ bool srs_log_header(char* buffer, int size, bool utc, bool dangerous, const char
     }
     
     int written = -1;
+#if ZTRACE_SHORT
+    written = snprintf(buffer, size,
+                "[%02d %02d:%02d:%02d.%03d][%s][%s] ",
+                tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(tv.tv_usec / 1000),
+                       level, tag ? tag : "");
+#else
     if (dangerous) {
         if (tag) {
             written = snprintf(buffer, size,
@@ -251,7 +257,7 @@ bool srs_log_header(char* buffer, int size, bool utc, bool dangerous, const char
                 level, getpid(), cid);
         }
     }
-    
+#endif
     if (written == -1) {
         return false;
     }

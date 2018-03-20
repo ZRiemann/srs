@@ -126,11 +126,16 @@ srs_error_t SrsFragment::rename()
     
     string full_path = fullpath();
     string tmp_file = tmppath();
-    
+#if 1 // add timestamp to file name
+    char now[64] = {0};
+    now[0] = '.';
+    zstr_now(&now[1], 63, 1);
+    full_path.insert(full_path.rfind("."), now);
+#endif
     if (::rename(tmp_file.c_str(), full_path.c_str()) < 0) {
         return srs_error_new(ERROR_SYSTEM_FRAGMENT_RENAME, "rename %s to %s", tmp_file.c_str(), full_path.c_str());
     }
-    
+
     return err;
 }
 

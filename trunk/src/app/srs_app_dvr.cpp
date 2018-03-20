@@ -80,7 +80,7 @@ SrsFragment* SrsDvrSegmenter::current()
 {
     return fragment;
 }
-
+ 
 srs_error_t SrsDvrSegmenter::open()
 {
     srs_error_t err = srs_success;
@@ -92,7 +92,17 @@ srs_error_t SrsDvrSegmenter::open()
     
     string path = generate_path();
     if (srs_path_exists(path)) {
+#if 0
         return srs_error_new(ERROR_DVR_CANNOT_APPEND, "DVR can't append to exists path=%s", path.c_str());
+#else
+        // by Z.Riemann: rename the file and continue.
+        std::string new_name = path;
+        char now[64] = {0};
+        now[0] = '.';
+        zstr_now(&now[1], 63, 1);
+        new_name.insert(new_name.rfind("."), now);
+        rename(path.c_str(), new_name.c_str());
+#endif
     }
     fragment->set_path(path);
     

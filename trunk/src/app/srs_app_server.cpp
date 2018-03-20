@@ -957,7 +957,7 @@ srs_error_t SrsServer::do_cycle()
             // do persistence config to file.
             if (signal_persistence_config) {
                 signal_persistence_config = false;
-                srs_info("get signal to persistence config to file.");
+                srs_verbose("get signal to persistence config to file.");
                 
                 if ((err = _srs_config->persistence()) != srs_success) {
                     return srs_error_wrap(err, "config persistence to file");
@@ -968,7 +968,7 @@ srs_error_t SrsServer::do_cycle()
             // do reload the config.
             if (signal_reload) {
                 signal_reload = false;
-                srs_info("get signal to reload the config.");
+                srs_verbose("get signal to reload the config.");
                 
                 if ((err = _srs_config->reload()) != srs_success) {
                     return srs_error_wrap(err, "config reload");
@@ -983,48 +983,48 @@ srs_error_t SrsServer::do_cycle()
             
             // update the cache time
             if ((i % SRS_SYS_TIME_RESOLUTION_MS_TIMES) == 0) {
-                srs_info("update current time cache.");
+                srs_verbose("update current time cache.");
                 srs_update_system_time_ms();
             }
             
 #ifdef SRS_AUTO_STAT
             if ((i % SRS_SYS_RUSAGE_RESOLUTION_TIMES) == 0) {
-                srs_info("update resource info, rss.");
+                srs_verbose("update resource info, rss.");
                 srs_update_system_rusage();
             }
             if ((i % SRS_SYS_CPU_STAT_RESOLUTION_TIMES) == 0) {
-                srs_info("update cpu info, cpu usage.");
+                srs_verbose("update cpu info, cpu usage.");
                 srs_update_proc_stat();
             }
             if ((i % SRS_SYS_DISK_STAT_RESOLUTION_TIMES) == 0) {
-                srs_info("update disk info, disk iops.");
+                srs_verbose("update disk info, disk iops.");
                 srs_update_disk_stat();
             }
             if ((i % SRS_SYS_MEMINFO_RESOLUTION_TIMES) == 0) {
-                srs_info("update memory info, usage/free.");
+                srs_verbose("update memory info, usage/free.");
                 srs_update_meminfo();
             }
             if ((i % SRS_SYS_PLATFORM_INFO_RESOLUTION_TIMES) == 0) {
-                srs_info("update platform info, uptime/load.");
+                srs_verbose("update platform info, uptime/load.");
                 srs_update_platform_info();
             }
             if ((i % SRS_SYS_NETWORK_DEVICE_RESOLUTION_TIMES) == 0) {
-                srs_info("update network devices info.");
+                srs_verbose("update network devices info.");
                 srs_update_network_devices();
             }
             if ((i % SRS_SYS_NETWORK_RTMP_SERVER_RESOLUTION_TIMES) == 0) {
-                srs_info("update network server kbps info.");
+                srs_verbose("update network server kbps info.");
                 resample_kbps();
             }
             if (_srs_config->get_heartbeat_enabled()) {
                 if ((i % heartbeat_max_resolution) == 0) {
-                    srs_info("do http heartbeat, for internal server to report.");
+                    srs_verbose("do http heartbeat, for internal server to report.");
                     http_heartbeat->heartbeat();
                 }
             }
 #endif
             
-            srs_info("server main thread loop");
+            srs_verbose("server main thread loop");
         }
     }
     

@@ -121,7 +121,7 @@ void SrsFastLog::info(const char* tag, int context_id, const char* fmt, ...)
     }
     
     int size = 0;
-    if (!srs_log_header(log_data, LOG_MAX_SIZE, utc, false, tag, context_id, "Debug", &size)) {
+    if (!srs_log_header(log_data, LOG_MAX_SIZE, utc, false, tag, context_id, "Info", &size)) {
         return;
     }
     

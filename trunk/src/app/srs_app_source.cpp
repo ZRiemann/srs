@@ -263,6 +263,7 @@ int SrsMessageQueue::duration()
 void SrsMessageQueue::set_queue_size(double queue_size)
 {
     queue_size_ms = (int)(queue_size * 1000);
+    //srs_trace("ztrace: queue_size_ms<%d>", queue_size_ms);
 }
 
 srs_error_t SrsMessageQueue::enqueue(SrsSharedPtrMessage* msg, bool* is_overflow)
@@ -278,13 +279,15 @@ srs_error_t SrsMessageQueue::enqueue(SrsSharedPtrMessage* msg, bool* is_overflow
     }
     
     msgs.push_back(msg);
-    
+
+    /* srs_trace("ztrace: end:%d start:%d base:%d<%p>",
+       av_end_time, av_start_time, queue_size_ms, this); */
+
     while (av_end_time - av_start_time > queue_size_ms) {
         // notice the caller queue already overflow and shrinked.
         if (is_overflow) {
             *is_overflow = true;
         }
-        
         shrink();
     }
     
@@ -384,7 +387,7 @@ void SrsMessageQueue::shrink()
     }
     
     if (!_ignore_shrink) {
-        srs_trace("shrink the cache queue, size=%d, removed=%d, max=%.2f",
+        srs_verbose("shrink the cache queue, size=%d, removed=%d, max=%.2f",
                   (int)msgs.size(), msgs_size - (int)msgs.size(), queue_size_ms / 1000.0);
     }
 }
@@ -1475,12 +1478,15 @@ srs_error_t SrsOriginHub::create_forwarders()
         
         SrsForwarder* forwarder = new SrsForwarder(this);
         forwarders.push_back(forwarder);
-        
+
         // initialize the forwarder with request.
         if ((err = forwarder->initialize(req, forward_server)) != srs_success) {
             return srs_error_wrap(err, "init forwarder");
         }
-        
+
+        double queue_size = _srs_config->get_queue_length(req->vhost);
+        forwarder->set_queue_size(queue_size);
+
         // TODO: FIXME: support queue size.
         //double queue_size = _srs_config->get_queue_length(req->vhost);
         //forwarder->set_queue_size(queue_size);

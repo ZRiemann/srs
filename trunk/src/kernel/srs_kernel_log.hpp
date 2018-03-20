@@ -130,23 +130,21 @@ extern ISrsLog* _srs_log;
 extern ISrsThreadContext* _srs_context;
 
 // donot print method
-#if 1
+#if 0
     #define srs_verbose(msg, ...) _srs_log->verbose(NULL, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_info(msg, ...)    _srs_log->info(NULL, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_trace(msg, ...)   _srs_log->trace(NULL, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_warn(msg, ...)    _srs_log->warn(NULL, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_error(msg, ...)   _srs_log->error(NULL, _srs_context->get_id(), msg, ##__VA_ARGS__)
-#endif
 // use __FUNCTION__ to print c method
-#if 0
+#elif 0
     #define srs_verbose(msg, ...) _srs_log->verbose(__FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_info(msg, ...)    _srs_log->info(__FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_trace(msg, ...)   _srs_log->trace(__FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_warn(msg, ...)    _srs_log->warn(__FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_error(msg, ...)   _srs_log->error(__FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
-#endif
 // use __PRETTY_FUNCTION__ to print c++ class:method
-#if 0
+#else
     #define srs_verbose(msg, ...) _srs_log->verbose(__PRETTY_FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_info(msg, ...)    _srs_log->info(__PRETTY_FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
     #define srs_trace(msg, ...)   _srs_log->trace(__PRETTY_FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
@@ -154,6 +152,7 @@ extern ISrsThreadContext* _srs_context;
     #define srs_error(msg, ...)   _srs_log->error(__PRETTY_FUNCTION__, _srs_context->get_id(), msg, ##__VA_ARGS__)
 #endif
 
+#if 0 /* enable auto_* */
 // TODO: FIXME: add more verbose and info logs.
 #ifndef SRS_AUTO_VERBOSE
     #undef srs_verbose
@@ -167,6 +166,25 @@ extern ISrsThreadContext* _srs_context;
     #undef srs_trace
     #define srs_trace(msg, ...) (void)0
 #endif
+#endif /* enable auto_* */
 
+#define ZTRACE_SHORT 1 /** short date format*/
+#define ZTRACE_BIN_DATA 0 /** trace binary data */
+#define ZTRACE_STR_DATA 1 /** control trace string data */
+/**
+ * @brief print string or binrary data to console
+ * @param data [in] print data pointer
+ * @param len [in] data size
+ */
+void zprint_bin(char *data, int len);
+/**
+ * @brief string now
+ * @param buf [in] string time buffer, char[64]
+ * @param len [in] buffer length
+ * @param flag [in] 0- yyMMddhhmmss
+ *                  1- hhmmss
+ * @return buf pointer
+ */
+char *zstr_now(char *buf, int len, int flag);
 #endif
 

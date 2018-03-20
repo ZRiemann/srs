@@ -197,7 +197,8 @@ srs_error_t SrsFastStream::grow(ISrsReader* reader, int required_size)
         end += nread;
         nb_free_space -= nread;
     }
-    
+
+    /* srs_info("\n%s", buffer); */
     return err;
 }
 

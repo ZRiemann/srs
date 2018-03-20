@@ -27,5 +27,8 @@
 /trunk/research/api-server/static-dir/live
 /trunk/research/api-server/static-dir/players
 
+# by Z.Riemann
+*.pid
+
 # Apple-specific garbage files.
 .AppleDouble

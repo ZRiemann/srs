@@ -115,6 +115,7 @@ srs_error_t SrsHttpParser::parse_message_imp(ISrsProtocolReaderWriter* io)
         // @see https://github.com/ossrs/srs/issues/400
         char* start = buffer->bytes();
         char* end = start + buffer->size();
+
         for (char* p = start; p <= end - 4; p++) {
             // SRS_HTTP_CRLFCRLF "\r\n\r\n" // 0x0D0A0D0A
             if (p[0] == SRS_CONSTS_CR && p[1] == SRS_CONSTS_LF && p[2] == SRS_CONSTS_CR && p[3] == SRS_CONSTS_LF) {

@@ -463,7 +463,7 @@ srs_error_t SrsRtmpConn::stream_service_cycle()
     srs_error_t err = srs_success;
     
     SrsRequest* req = info->req;
-    
+    srs_trace("ztrace: before identify_client");
     if ((err = rtmp->identify_client(info->res->stream_id, info->type, req->stream, req->duration)) != srs_success) {
         return srs_error_wrap(err, "rtmp: identify client");
     }

@@ -938,7 +938,7 @@ void srs_update_network_devices()
             
             sscanf(fname, "%s", r.name);
             _nb_srs_system_network_devices = i + 1;
-            srs_info("scan network device ifname=%s, total=%d", r.name, _nb_srs_system_network_devices);
+            srs_verbose("scan network device ifname=%s, total=%d", r.name, _nb_srs_system_network_devices);
             
             r.sample_time = srs_get_system_time_ms();
             r.ok = true;

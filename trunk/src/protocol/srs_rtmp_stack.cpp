@@ -2498,6 +2498,13 @@ srs_error_t SrsRtmpServer::identify_client(int stream_id, SrsRtmpConnType& type,
         
         if (!h.is_amf0_command() && !h.is_amf3_command()) {
             srs_trace("ignore message type=%#x", h.message_type);
+
+            // zfix h.message_type = 8/9, avoid dead loop.
+            if(8 == h.message_type || 9 == h.message_type){
+                srs_error_new(ERROR_SYSTEM_PACKET_INVALID, "identify_client with vedio/audio data.");
+                break;
+            }
+
             continue;
         }
         

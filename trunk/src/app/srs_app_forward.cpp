@@ -23,6 +23,7 @@
 
 #include <srs_app_forward.hpp>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -87,6 +88,7 @@ srs_error_t SrsForwarder::initialize(SrsRequest* r, string ep)
 
 void SrsForwarder::set_queue_size(double queue_size)
 {
+    //srs_trace("ztrace: queue<%p>", queue);
     queue->set_queue_size(queue_size);
 }
 
@@ -95,13 +97,13 @@ srs_error_t SrsForwarder::on_publish()
     srs_error_t err = srs_success;
     
     // discovery the server port and tcUrl from req and ep_forward.
+    char sport[128] = {0};
     std::string server;
     std::string tcUrl;
     int port = SRS_CONSTS_RTMP_DEFAULT_PORT;
     if (true) {
         // parse host:port from hostport.
         srs_parse_hostport(ep_forward, server, port);
-        
         // generate tcUrl
         tcUrl = srs_generate_tc_url(server, req->vhost, req->app, port, req->param);
     }
@@ -110,7 +112,8 @@ srs_error_t SrsForwarder::on_publish()
     std::string source_ep = "rtmp://";
     source_ep += req->host;
     source_ep += ":";
-    source_ep += req->port;
+    snprintf(sport, 128, "%d", req->port);
+    source_ep += sport;
     source_ep += "?vhost=";
     source_ep += req->vhost;
     
@@ -121,7 +124,8 @@ srs_error_t SrsForwarder::on_publish()
         dest_ep += server;
     }
     dest_ep += ":";
-    dest_ep += port;
+    snprintf(sport, 128, "%d", port);
+    dest_ep += sport;
     dest_ep += "?vhost=";
     dest_ep += req->vhost;
     
@@ -191,7 +195,7 @@ srs_error_t SrsForwarder::on_video(SrsSharedPtrMessage* shared_video)
     srs_error_t err = srs_success;
     
     SrsSharedPtrMessage* msg = shared_video->copy();
-    
+    // srs_trace("ztrace: on_video()...");
     // TODO: FIXME: config the jitter of Forwarder.
     if ((err = jitter->correct(msg, SrsRtmpJitterAlgorithmOFF)) != srs_success) {
         return srs_error_wrap(err, "jitter");
